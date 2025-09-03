@@ -1,0 +1,19 @@
+[project]
+name = "api_training"
+version = "0.1.0"
+description = "A FastAPI project to use roman numeral converter"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "psycopg2",
+    "sqlalchemy",
+    "roman_converter@git+https://github.com/sarahxccel/roman_converter.git"
+]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
