@@ -25,7 +25,7 @@ data "google_project" "project" {}
 
 # --- Cloud SQL Instance ---
 resource "google_sql_database_instance" "db_instance" {
-  depends_on       = [google_project_service.sql_admin]
+  # depends_on       = [google_project_service.sql_admin]
   name             = "sarahs-db"
   database_version = "POSTGRES_14"
   region           = var.location
@@ -69,7 +69,7 @@ resource "google_project_iam_member" "run_sql_access" {
 # --- Cloud Run Service ---
 resource "google_cloud_run_v2_service" "api" {
   depends_on          = [
-    google_project_service.run_api,
+    # google_project_service.run_api,
     google_project_iam_member.run_sql_access
   ]
   name                = "sarahs-api"
