@@ -49,15 +49,14 @@ jobs:
 
       - name: Terraform Plan
         env:
-          TF_VAR_db_password: ${{ secrets.DATABASE_PASSWORD }}
           TF_VAR_project: ae-terraform-2025
-          TF_VAR_location: europe-west4
+          TF_VAR_location: europe-west4   # temporary hardcoded value
           TF_VAR_database_name: mydatabase
           TF_VAR_database_user: dbuser
           TF_VAR_instance_connection_name: ae-terraform-2025:europe-west4:sarahs-db
           TF_VAR_deletion_protection: "false"
         run: terraform -chdir=terraform plan -out=tfplan
 
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main'
-      #   run: terraform -chdir=terraform apply -var="deletion_protection=false" -auto-approve tfplan
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform -chdir=terraform apply -var="deletion_protection=false" -auto-approve tfplan
