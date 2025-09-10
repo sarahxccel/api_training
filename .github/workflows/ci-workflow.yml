@@ -1,0 +1,38 @@
+name: CI Workflow with Secrets
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    env:
+      # Map GitHub secret DATABASE_PASSWORD to Terraform variable db_password
+      TF_VAR_db_password: ${{ secrets.DATABASE_PASSWORD }}
+
+    steps:
+      # 1️⃣ Checkout the repository so workflow can access your code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Authenticate with Google Cloud using your GitHub secret
+      - id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      # Optional: configure Docker for GCP if you need to build/push images
+      - name: Configure Docker for GCP
+        run: gcloud auth configure-docker gcr.io
+        shell: bash
+
+      # 3️⃣ Test that env variable is available
+      - name: Show DB Password (safe test)
+        run: echo "Terraform will see db_password is set ✅"
+
+      # 4️⃣ Placeholder for any further steps: linting, tests, Terraform, Docker, etc.
+      - name: Say Hello
+        run: echo "👋 Hello World from GitHub Actions!"
