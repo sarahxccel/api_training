@@ -47,6 +47,9 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=terraform init
 
+      - name: Github Terraform Destroy
+        run: terraform -chdir=terraform destroy -auto-approve
+
       - name: Terraform Plan
         env:
           TF_VAR_project: ae-terraform-2025

@@ -29,6 +29,7 @@ resource "google_sql_database_instance" "db_instance" {
   name             = "sarahs-db"
   database_version = "POSTGRES_14"
   region           = var.location
+  deletion_protection = var.deletion_protection
 
   settings {
     tier = "db-f1-micro"
@@ -61,7 +62,8 @@ resource "google_vpc_access_connector" "connector" {
 resource "google_project_iam_member" "run_sql_access" {
   project = var.project
   role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+  #member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+  member = "serviceAccount:github-actions-sarah@ae-terraform-2025.iam.gserviceaccount.com"
 }
 
 # --- Cloud Run Service ---
@@ -75,7 +77,7 @@ resource "google_cloud_run_v2_service" "api" {
   deletion_protection = var.deletion_protection
 
   template {
-    service_account = "${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+    service_account = "github-actions-sarah@ae-terraform-2025.iam.gserviceaccount.com"
 
     containers {
       image = "${var.location}-docker.pkg.dev/${var.project}/ae-2025-registry/sarahs-image:latest"
