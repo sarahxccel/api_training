@@ -27,10 +27,7 @@ jobs:
 
       # Optional: configure Docker for GCP if you need to build/push images
       - name: Authenticate Docker with Artifact Registry
-        run: gcloud auth print-access-token | docker login \
-          europe-west4-docker.pkg.dev \
-          --username oauth2accesstoken \
-          --password-stdin
+        run: gcloud auth print-access-token | docker login europe-west4-docker.pkg.dev --username oauth2accesstoken --password-stdin
         shell: bash
 
       - name: Build Docker for GCP
