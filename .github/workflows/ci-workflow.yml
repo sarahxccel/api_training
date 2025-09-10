@@ -59,4 +59,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=terraform apply -var="deletion_protection=false" -auto-approve
+        run: terraform -chdir=terraform apply -auto-approve tfplan
