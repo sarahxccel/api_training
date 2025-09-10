@@ -48,8 +48,8 @@ jobs:
       - name: Terraform Init
         run: terraform -chdir=terraform init
 
-      - name: Github Terraform Destroy
-        run: terraform -chdir=terraform destroy -auto-approve
+      # - name: Github Terraform Destroy
+      #   run: terraform -chdir=terraform destroy -auto-approve
 
       - name: Terraform Plan
         env:
@@ -61,6 +61,6 @@ jobs:
           TF_VAR_deletion_protection: "false"
         run: terraform -chdir=terraform plan -out=tfplan
 
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/main'
-      #   run: terraform -chdir=terraform apply -auto-approve tfplan
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform -chdir=terraform apply -auto-approve tfplan

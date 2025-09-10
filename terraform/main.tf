@@ -4,21 +4,21 @@ provider "google" {
   region  = var.location
 }
 
-# --- Enable necessary APIs ---
-resource "google_project_service" "artifact_registry" {
-  project = var.project
-  service = "artifactregistry.googleapis.com"
-}
+# # --- Enable necessary APIs ---
+# resource "google_project_service" "artifact_registry" {
+#   project = var.project
+#   service = "artifactregistry.googleapis.com"
+# }
 
-resource "google_project_service" "sql_admin" {
-  project = var.project
-  service = "sqladmin.googleapis.com"
-}
+# resource "google_project_service" "sql_admin" {
+#   project = var.project
+#   service = "sqladmin.googleapis.com"
+# }
 
-resource "google_project_service" "run_api" {
-  project = var.project
-  service = "run.googleapis.com"
-}
+# resource "google_project_service" "run_api" {
+#   project = var.project
+#   service = "run.googleapis.com"
+# }
 
 # --- Project metadata ---
 data "google_project" "project" {}
