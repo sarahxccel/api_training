@@ -60,6 +60,6 @@ jobs:
           TF_VAR_deletion_protection: "false"
         run: terraform -chdir=terraform plan -out=tfplan
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=terraform apply -auto-approve tfplan
+      # - name: Terraform Apply
+      #   if: github.ref == 'refs/heads/main'
+      #   run: terraform -chdir=terraform apply -auto-approve tfplan
