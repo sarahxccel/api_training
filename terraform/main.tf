@@ -70,6 +70,10 @@ resource "google_project_iam_member" "run_sql_access" {
 resource "google_cloud_run_v2_service" "api" {
   depends_on          = [
     # google_project_service.run_api,
+    google_project_iam_member.run_sql_access,
+    google_sql_database_instance.db_instance,
+    google_sql_user.db_user,
+    google_vpc_access_connector.connector,
     google_project_iam_member.run_sql_access
   ]
   name                = "sarahs-api"

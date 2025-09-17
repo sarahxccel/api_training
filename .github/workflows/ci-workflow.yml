@@ -26,18 +26,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
 
-      # Optional: configure Docker for GCP if you need to build/push images
-      - name: Authenticate Docker with Artifact Registry
-        run: gcloud auth print-access-token | docker login europe-west4-docker.pkg.dev --username oauth2accesstoken --password-stdin
-        shell: bash
 
-      - name: Build Docker for GCP
-        run: docker build -t europe-west4-docker.pkg.dev/ae-terraform-2025/ae-2025-registry/sarahs-image:latest .
-        shell: bash
-
-      - name: Push Docker for GCP
-        run: docker push europe-west4-docker.pkg.dev/ae-terraform-2025/ae-2025-registry/sarahs-image:latest
-        shell: bash
 
       # 3️⃣ Terraform section
       - name: Install Terraform
@@ -64,3 +53,28 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform -chdir=terraform apply -auto-approve tfplan
+
+
+      # Optional: configure Docker for GCP if you need to build/push images
+      - name: Authenticate Docker with Artifact Registry
+        run: gcloud auth print-access-token | docker login europe-west4-docker.pkg.dev --username oauth2accesstoken --password-stdin
+        shell: bash
+
+      - name: Build Docker for GCP
+        run: docker build -t europe-west4-docker.pkg.dev/ae-terraform-2025/ae-2025-registry/sarahs-image:latest .
+        shell: bash
+
+      - name: Push Docker for GCP
+        run: docker push europe-west4-docker.pkg.dev/ae-terraform-2025/ae-2025-registry/sarahs-image:latest
+        shell: bash
+
+      # - name: Cloud run api
+      #   run: |
+      #     gcloud run deploy sarahs-api \
+      #       --image=europe-west4-docker.pkg.dev/ae-terraform-2025/ae-2025-registry/sarahs-image:latest \
+      #       --region=europe-west4 \
+      #       --platform=managed \
+      #       --allow-unauthenticated \
+      #       --set-env-vars INSTANCE_CONNECTION_NAME="ae-terraform-2025:europe-west4:sarahs-db",DATABASE_NAME="mydatabase",DATABASE_USER="dbuser",DATABASE_PASSWORD=${{env.TF_VAR_db_password}} \
+      #       --vpc-connector=serverless-connector \
+      #   shell: bash
