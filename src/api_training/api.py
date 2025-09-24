@@ -1,6 +1,9 @@
 """Defines the FastAPI application and its endpoints."""
 
+import os
+import re
 import time
+from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, HTTPException
 from pydantic import BaseModel
@@ -11,25 +14,27 @@ from sqlalchemy.orm import Session
 from api_training.database import Base, SessionLocal, engine
 from api_training.models import Conversion
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Handle application lifespan events."""
+    if os.getenv("ENV") != "test":
+        retries = 5
+        for i in range(retries):
+            try:
+                Base.metadata.create_all(bind=engine)
+                print("✅ Database initialized")
+                break
+            except OperationalError:
+                print(f"❌ DB not ready, retrying... ({i+1}/{retries})")
+                time.sleep(5)
+        else:
+            raise RuntimeError("Could not connect to DB after several retries")
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 converter = RomanNumeralConverter()  # Ensure this is initialized
-
-
-# Initialize database with retry without crashing Cloud Run
-@app.on_event("startup")
-def startup():
-    """Initialize the database connection with retry logic."""
-    retries = 5
-    for i in range(retries):
-        try:
-            Base.metadata.create_all(bind=engine)
-            print("✅ Database initialized")
-            break
-        except OperationalError:
-            print(f"❌ DB not ready, retrying... ({i+1}/{retries})")
-            time.sleep(5)
-    else:
-        raise RuntimeError("Could not connect to DB after several retries")
 
 
 # Dependency for getting DB session
@@ -59,10 +64,15 @@ class ArabicRequest(BaseModel):
 @app.post("/arabic")
 def convert_to_arabic(data: RomanRequest, db: Session = Depends(get_db)):
     """Convert a Roman numeral to an Arabic numeral."""
+    roman_upper = data.roman.upper()
+    if not re.match(r"^[MDCLXVI]+$", roman_upper):
+        raise HTTPException(
+            status_code=400, detail="Invalid characters in Roman numeral"
+        )
     try:
-        result = converter.roman_to_arabic(data.roman.upper())
+        result = converter.roman_to_arabic(roman_upper)
         entry = Conversion(
-            input_value=data.roman.upper(),
+            input_value=roman_upper,
             output_value=str(result),
             direction="roman_to_arabic",
         )

@@ -14,7 +14,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "ruff",
-    "black"
+    "black",
+    "pytest",
+    "httpx"
 ]
 
 [build-system]
