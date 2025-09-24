@@ -84,7 +84,7 @@ resource "google_cloud_run_v2_service" "api" {
     service_account = "github-actions-sarah@ae-terraform-2025.iam.gserviceaccount.com"
 
     containers {
-      image = "${var.location}-docker.pkg.dev/${var.project}/ae-2025-registry/sarahs-image:latest"
+      image = "${var.location}-docker.pkg.dev/${var.project}/${var.docker_registry}/sarahs-image:latest"
 
       env {
         name  = "INSTANCE_CONNECTION_NAME"

@@ -1,10 +1,11 @@
 variable "project" {
   type    = string
-  default = "ae-terraform-2025"
+  sensitive = true
 }
 
 variable "location" {
   type    = string
+  sensitive = true
 }
 
 variable "db_password" {
@@ -19,16 +20,21 @@ variable "deletion_protection" {
 
 variable "database_name" {
   type    = string
-  default = "mydatabase"
+  sensitive = true
 }
 
 variable "database_user" {
   type    = string
-  default = "dbuser"
+  sensitive = true
 }
 
 variable "instance_connection_name" {
   type = string
+  sensitive = true
   description = "Cloud SQL instance connection name in the format project:region:instance-name"
-  default = "ae-terraform-2025:europe-west4:sarahs-db"
+}
+
+variable "docker_registry" {
+  type        = string
+  description = "Name of the Docker Artifact Registry repo"
 }
