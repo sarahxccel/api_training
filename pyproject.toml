@@ -6,9 +6,15 @@ dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "pydantic",
-    "psycopg2",
+    "psycopg2-binary",
     "sqlalchemy",
     "roman_converter@git+https://github.com/sarahxccel/roman_converter.git"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "black"
 ]
 
 [build-system]
@@ -17,3 +23,13 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "D"]
+ignore = ["D203", "D213"]
